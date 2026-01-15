@@ -4,10 +4,33 @@ import ChatContainer from "../components/ChatContainer";
 import NoConversationPlaceholder from "../components/NoConversationPlaceholder";
 import { LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const ChatPage = () => {
   const { selectedUser, user, logout } = useChatStore();
   const navigate = useNavigate();
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    get_all_users();
+    if (!user) {
+      navigate("/login");
+    }
+  }, []);
+
+  const get_all_users = ()=>{
+    fetch("http://localhost:3000/api/find-all-users",{
+       method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        }
+    })
+    .then((res)=>res.json())
+    .then((data)=>{
+      setUsers(data.users);
+    })
+  }
 
   const handleLogout = () => {
     logout();

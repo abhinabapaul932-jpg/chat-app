@@ -20,7 +20,7 @@ function LoginPage() {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
+      const response = await fetch("http://localhost:3000/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -29,12 +29,13 @@ function LoginPage() {
       });
 
       const data = await response.json();
+      console.log(data);
 
-      if (data.success) {
-        console.log("Login successful:", data.user);
+      if (data.message=="User found") {
+        console.log("Login successful:", data.username);
         // Store user in both localStorage and zustand store
-        localStorage.setItem("user", JSON.stringify(data.user));
-        setUser(data.user);
+        localStorage.setItem("user",data.username);
+        setUser(data.username);
         navigate("/");
       } else {
         setError(data.message || "Login failed");
